@@ -77,10 +77,10 @@ def _parse_arg(argv):
         # Gets baudrate
         baudrate = int(argv[2])
         if baudrate not in p2def.AVAILABLE_BAUD:
-            print "Error: Invalid baudrate."
+            print("Error: Invalid baudrate.")
             sys.exit()
     else:
-        print "Error: Invalid argument."
+        print("Error: Invalid argument.")
         sys.exit()
     return (portinfo, baudrate)
 
@@ -167,16 +167,15 @@ def main():
                 raw_input('Press Enter key to register.')
                 res_code = hvc_p2_api.register_data(user_id, data_id, img)
                 if res_code < p2def.RESPONSE_CODE_NORMAL: # error
-                    print "Error: Invalid register album."
+                    print("Error: Invalid register album.")
                     break
                 if res_code == p2def.RESPONSE_CODE_NO_FACE:
-                    print "\nNumber of faces that can be registered is 0."
+                    print("\nNumber of faces that can be registered is 0.")
                 if res_code == p2def.RESPONSE_CODE_PLURAL_FACE:
-                    print "\nNumber of detected faces is 2 or more."
+                    print("\nNumber of detected faces is 2 or more.")
                 if res_code == p2def.RESPONSE_CODE_NORMAL: # success
                     img.save(img_fname)
-                    print"Success to register. user_id=" + str_uid \
-                          + "  data_id=" + str_did
+                    print(f"Success to register. user_id={str_uid}  data_id={str_did})
 
             if operation_str == 'g':
                 while True:
@@ -184,28 +183,28 @@ def main():
                     if str_uid >= '0' and str_uid <= '99':
                         user_id = int(str_uid)
                         break
-                print "uid[{0}]: ".format(user_id),
-                (res_code, data_list) = hvc_p2_api.get_user_data(user_id)
+                print(f"uid[{user_id}]: "
+                res_code, data_list = hvc_p2_api.get_user_data(user_id)
                 if res_code < p2def.RESPONSE_CODE_NORMAL: # error
-                    print "Error: Invalid register album."
+                    print("Error: Invalid register album.")
                     break
-                print data_list
+                print(data_list)
 
             if operation_str == 's':
                 # Saves album to flash ROM on B5T-007001.
                 res_code = hvc_p2_api.save_album_to_flash()
                 if res_code is not p2def.RESPONSE_CODE_NORMAL:
-                    print "Error: Invalid save album to flash."
+                    print("Error: Invalid save album to flash.")
                     break
                 # Saves album to the file.
                 res_code, save_album = hvc_p2_api.save_album()
                 if res_code is not p2def.RESPONSE_CODE_NORMAL:
-                    print "Error: Invalid save album."
+                    print("Error: Invalid save album.")
                     break
                 with open(album_fname, "wb") as file:
                     file.write(save_album)
 
-                print ("Success to save album.")
+                print("Success to save album.")
 
             if operation_str == 'l':
                 # Loads album from file
@@ -215,22 +214,22 @@ def main():
 
                 res_code = hvc_p2_api.load_album(load_album)
                 if res_code is not p2def.RESPONSE_CODE_NORMAL:
-                    print "Error: Invalid load album."
+                    print("Error: Invalid load album.")
                     break
-                print "Success to load album."
+                print("Success to load album.")
 
             if operation_str == 'd':
                 # Deletes all album data
                 res_code = hvc_p2_api.delete_all_data()
                 if res_code is not p2def.RESPONSE_CODE_NORMAL:
-                    print "Error: Invalid save album to flash."
+                    print("Error: Invalid save album to flash.")
                     break
                 # Saves album to flash ROM on B5T-007001.
                 res_code = hvc_p2_api.save_album_to_flash()
                 if res_code is not p2def.RESPONSE_CODE_NORMAL:
-                    print "Error: Invalid save album to flash."
+                    print("Error: Invalid save album to flash.")
                     break
-                print ("Success to delete album.")
+                print("Success to delete album.")
 
     except KeyboardInterrupt:
         time.sleep(1)

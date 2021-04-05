@@ -21,10 +21,10 @@ from okao_result import *
 from hvc_tracking_result_c import *
 
 
-status_dic = {STB_STATUS_CALCULATING:"CALCULATING",\
-              STB_STATUS_COMPLETE   :"COMPLETE",\
-              STB_STATUS_FIXED      :"FIXED",\
-              STB_STATUS_NO_DATA    :"NO_DATA"}
+status_dic = {STB_STATUS_CALCULATING: "CALCULATING",
+              STB_STATUS_COMPLETE: "COMPLETE",
+              STB_STATUS_FIXED: "FIXED",
+              STB_STATUS_NO_DATA: "NO_DATA"}
 
 
 class TrackingAgeResult(AgeResult):
@@ -35,10 +35,10 @@ class TrackingAgeResult(AgeResult):
 
     def __str__(self):
         if self.tracking_status == STB_STATUS_NO_DATA:
-            str = 'Age           Age:-    Conf:-'
+            string = 'Age           Age: No data found'
         else:
-            str = AgeResult.__str__(self)
-        return str + ' Status:{0}'.format(status_dic[self.tracking_status])
+            string = AgeResult.__str__(self)
+        return f'{string} Status:{status_dic[self.tracking_status]}'
 
 
 class TrackingGenderResult(GenderResult):
@@ -49,10 +49,10 @@ class TrackingGenderResult(GenderResult):
 
     def __str__(self):
         if self.tracking_status == STB_STATUS_NO_DATA:
-            str = 'Gender        Gender:- Conf:-'
+            string = 'Gender        Gender:- Conf:-'
         else:
-            str = GenderResult.__str__(self)
-        return str + ' Status:{0}'.format(status_dic[self.tracking_status])
+            string = GenderResult.__str__(self)
+        return f'{string} Status:{status_dic[self.tracking_status]}'
 
 
 class TrackingRecognitionResult(RecognitionResult):
@@ -63,16 +63,17 @@ class TrackingRecognitionResult(RecognitionResult):
 
     def __str__(self):
         if self.uid == RECOG_NO_DATA_IN_ALBUM:
-            str = 'Recognition   No data is registered in the album.'
-        elif self.uid == RECOG_NOT_POSSIBLE: # Recognition was not possible.
-            str = 'Recognition   Uid:- Score:{0} Status:{1}'.format(self.score,status_dic[self.tracking_status])
+            string = 'Recognition   No data is registered in the album.'
+        elif self.uid == RECOG_NOT_POSSIBLE:  # Recognition failed.
+            string = f'Recognition   Uid:- Score:{self.score} Status:{status_dic[self.tracking_status]}'
         elif self.tracking_status == STB_STATUS_NO_DATA:
-            str = 'Recognition   Uid:- Score:- Status:{0}'.format(status_dic[self.tracking_status])
-        elif self.uid == -1: # Unknown user.
-            str = 'Recognition   Uid:Unknown Score:{0} Status:{1}'.format(self.score,status_dic[self.tracking_status])
+            string = f'Recognition   Uid:- Score:- Status:{status_dic[self.tracking_status]}'
+        elif self.uid == -1:  # Unknown user.
+            string = f'Recognition   Uid:Unknown Score:{self.score} Status:{status_dic[self.tracking_status]}'
         else:
-            str = 'Recognition   Uid:{0} Score:{1} Status:{2}'.format(self.uid,self.score,status_dic[self.tracking_status])
+            string = f'Recognition   Uid:{self.uid} Score:{self.score} Status:{status_dic[self.tracking_status]}'
         return str
+
 
 class FaceList(list):
 
@@ -80,8 +81,8 @@ class FaceList(list):
         """Appends the result of STB output to this face list."""
         for i in range(face_count):
             f = face_res35[i]
-            tr_f = TrackingFaceResult(f.center.x, f.center.y, f.nSize,\
-                                      f.conf, f.nDetectID, f.nTrackingID);
+            tr_f = TrackingFaceResult(f.center.x, f.center.y, f.nSize,
+                                      f.conf, f.nDetectID, f.nTrackingID)
 
             if exec_func & EX_AGE:
                 age = f.age
@@ -93,7 +94,8 @@ class FaceList(list):
 
             if exec_func & EX_RECOGNITION:
                 r = f.recognition
-                tr_f.recognition = TrackingRecognitionResult(r.status, r.value, r.conf)
+                tr_f.recognition = TrackingRecognitionResult(
+                    r.status, r.value, r.conf)
             """
             Note:
                 We do not use the functions(Face direction, Gaze, Blink and
@@ -122,11 +124,11 @@ class FaceList(list):
 
 class BodyList(list):
 
-    def append_BODY_RES35(self,exec_func, body_count, body_res35):
+    def append_BODY_RES35(self, exec_func, body_count, body_res35):
         for i in range(body_count):
             b = body_res35[i]
-            tr_b = TrackingResult(b.center.x, b.center.y, b.nSize,\
-                                      b.conf, b.nDetectID, b.nTrackingID);
+            tr_b = TrackingResult(b.center.x, b.center.y, b.nSize,
+                                  b.conf, b.nDetectID, b.nTrackingID)
             self.append(tr_b)
 
 
@@ -141,9 +143,11 @@ class HandList(list):
 
 
 class TrackingResult(object):
-    __slots__ = ['pos_x','pos_y', 'size', 'conf', 'detection_id','tracking_id']
-    def __init__(self, pos_x=None, pos_y=None, size=None, conf=None, detection_id=None,\
-                       tracking_id=None):
+    __slots__ = ['pos_x', 'pos_y', 'size',
+                 'conf', 'detection_id', 'tracking_id']
+
+    def __init__(self, pos_x=None, pos_y=None, size=None, conf=None, detection_id=None,
+                 tracking_id=None):
         self.pos_x = pos_x
         self.pos_y = pos_y
         self.size = size
@@ -160,18 +164,20 @@ class TrackingResult(object):
         t_id = self.tracking_id
 
         if self.tracking_id != -1:
-            s = 'TrackingID:%s\n' % self.tracking_id
+            s = f'Tracking ID: {self.tracking_id}\n'
         else:
             s = '\n'
-        return s + '      Detection     X:%s Y:%s, Size:%s Conf:%s'% (x, y, size, conf)
+        return f'{s}      Detection     X: {x} Y: {y}, Size: {size} Conf: {conf}'
 
 
 class TrackingFaceResult(TrackingResult):
-    __slots__ = ['direction','age','gender','gaze','blink','expression','recognition']
-    def __init__(self, pos_x=None, pos_y=None, size=None, conf=None,\
-                                   detection_id=None, tracking_id=None):
-        TrackingResult.__init__(self, pos_x, pos_y, size, conf,\
-                                             detection_id, tracking_id)
+    __slots__ = ['direction', 'age', 'gender',
+                 'gaze', 'blink', 'expression', 'recognition']
+
+    def __init__(self, pos_x=None, pos_y=None, size=None, conf=None,
+                 detection_id=None, tracking_id=None):
+        TrackingResult.__init__(self, pos_x, pos_y, size, conf,
+                                detection_id, tracking_id)
         self.direction = None
         self.age = None
         self.gender = None
@@ -183,19 +189,19 @@ class TrackingFaceResult(TrackingResult):
     def __str__(self):
         s = TrackingResult.__str__(self) + '\n'
         if self.direction is not None:
-            s += '      ' + self.direction.__str__() +'\n'
+            s += f'      {str(self.direction)}\n'
         if self.age is not None:
-            s += '      ' + self.age.__str__() +'\n'
+            s += f'      {str(self.age)}\n'
         if self.gender is not None:
-            s += '      ' + self.gender.__str__() +'\n'
+            s += f'      {str(self.gender)}\n'
         if self.gaze is not None:
-            s += '      ' + self.gaze.__str__() +'\n'
+            s += f'      {str(self.gaze)}\n'
         if self.blink is not None:
-            s += '      ' + self.blink.__str__() +'\n'
+            s += f'      {str(self.blink)}\n'
         if self.expression is not None:
-            s += '      ' + self.expression.__str__() +'\n'
+            s += f'      {str(self.expression)}\n'
         if self.recognition is not None:
-            s += '      ' + self.recognition.__str__()
+            s += f'      {str(self.recognition)}'
         return s
 
 
@@ -203,23 +209,24 @@ class HVCTrackingResult(object):
     """Class storing tracking result"""
 
     __slots__ = ['faces', 'bodies', 'hands']
+
     def __init__(self):
         self.faces = FaceList()
         self.bodies = BodyList()
         self.hands = HandList()
 
     def __str__(self):
-        s = 'Face Count = %s\n' % len(self.faces)
+        s = f'Face Count = {len(self.faces)}\n'
         for i in range(len(self.faces)):
-            s += '  [%s] ' % i + self.faces[i].__str__() +'\n'
+            s += f'  [{i}] {str(self.faces[i])}\n'
 
-        s += 'Body Count = %s\n' % len(self.bodies)
+        s += f'Body Count = {len(self.bodies)}\n'
         for i in range(len(self.bodies)):
-            s += '  [%s] ' % i + self.bodies[i].__str__() +'\n'
-
-        s += 'Hand Count = %s\n' % len(self.hands)
-        for i in range(len(self.hands)):
-            s += '  [%s] ' % i + self.hands[i].__str__() +'\n'
+            s += f'  [{i}] {str(self.bodies[i])}\n'
+        
+        # s += f'Hand Count = {len(self.hands)}\n'
+        # for i in range(len(self.hands)):
+        #     s += f'  [{i}] {str(self.hands[i])}\n'
 
         return s
 
@@ -233,27 +240,27 @@ class HVCTrackingResult(object):
         # Body detection result
         for i in range(len(frame_result.bodies)):
             b = frame_result.bodies[i]
-            body_res = TrackingResult(b.pos_x, b.pos_y, b.size,b.conf,i,\
-                                    STB_TRID_NOT_TRACKED)
+            body_res = TrackingResult(b.pos_x, b.pos_y, b.size, b.conf, i,
+                                      STB_TRID_NOT_TRACKED)
             self.bodies.append(body_res)
 
         # Hand detection result
         for i in range(len(frame_result.hands)):
             h = frame_result.hands[i]
-            hand_res = TrackingResult(h.pos_x, h.pos_y, h.size,h.conf,i,\
-                                    STB_TRID_NOT_TRACKED)
+            hand_res = TrackingResult(h.pos_x, h.pos_y, h.size, h.conf, i,
+                                      STB_TRID_NOT_TRACKED)
             self.hands.append(hand_res)
 
         # Face detection result
         for i in range(len(frame_result.faces)):
             f = frame_result.faces[i]
-            face_res = TrackingFaceResult(f.pos_x, f.pos_y, f.size,f.conf,i,\
-                                    STB_TRID_NOT_TRACKED)
+            face_res = TrackingFaceResult(f.pos_x, f.pos_y, f.size, f.conf, i,
+                                          STB_TRID_NOT_TRACKED)
             # Face direction result
             if f.direction is not None:
-                face_res.direction = DirectionResult(f.direction.LR,\
-                                                     f.direction.UD,\
-                                                     f.direction.roll,\
+                face_res.direction = DirectionResult(f.direction.LR,
+                                                     f.direction.UD,
+                                                     f.direction.roll,
                                                      f.direction.conf)
             # Age estimation result
             if f.age is not None:
@@ -269,19 +276,20 @@ class HVCTrackingResult(object):
                 face_res.blink = BlinkResult(f.blink.ratioR, f.blink.ratioL)
             # Expression estimation result
             if f.expression is not None:
-                face_res.expression = ExpressionResult(f.expression.neutral,\
-                                         f.expression.happiness,\
-                                         f.expression.surprise,\
-                                         f.expression.anger,\
-                                         f.expression.sadness,\
-                                         f.expression.neg_pos)
+                face_res.expression = ExpressionResult(f.expression.neutral,
+                                                       f.expression.happiness,
+                                                       f.expression.surprise,
+                                                       f.expression.anger,
+                                                       f.expression.sadness,
+                                                       f.expression.neg_pos)
             # Face recognition result
             if f.recognition is not None:
-                 face_res.recognition = RecognitionResult(f.recognition.uid,
-                                                          f.recognition.score)
+                face_res.recognition = RecognitionResult(f.recognition.uid,
+                                                         f.recognition.score)
 
             # Appends to face list.
             self.faces.append(face_res)
+
 
 if __name__ == '__main__':
     pass

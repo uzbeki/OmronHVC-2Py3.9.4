@@ -68,16 +68,18 @@ class HVCP2Api(object):
 
         self._exec_func = exec_func
 
-        os = sys.platform
-        if os == 'win32':
-            stb_lib_name = WINDOWS_STB_LIB_NAME
-        elif 'linux':
-            stb_lib_name = LINUX_STB_LIB_NAME
-        else:
-            raise 'Error: Unsupported OS.'
+        # os = sys.platform
+        # print(os)
+        # if os == 'win32':
+        #     stb_lib_name = WINDOWS_STB_LIB_NAME
+        # elif os == 'linux':
+        #     stb_lib_name = LINUX_STB_LIB_NAME
+        # else:
+        #     raise 'Error: Unsupported OS.'
 
         if self.use_stb:
-            self._stb = STB(stb_lib_name, exec_func)
+            # self._stb = STB(stb_lib_name, exec_func)
+            self._stb = STB('./libSTB.dll', exec_func)
 
     def connect(self, com_port, baudrate, timeout):
         """Connects to HVC-P2 by COM port via USB or UART interface.

@@ -162,22 +162,22 @@ class HVCResult(object):
         return
 
     def __str__(self):
-        s = 'Face count= %s\n' % len(self.faces)
+        s = f'Face count= {len(self.faces)}\n'
         for i in range(len(self.faces)):
             face = self.faces[i]
-            s += '\t[%s]\t' % i + face.__str__() +'\n'
+            s += f'\t[{i}]\t{str(face)}\n'
 
-        s += 'Body count= %s\n' % len(self.bodies)
+        s += f'Body count= {len(self.bodies)}\n'
         for i in range(len(self.bodies)):
-            s += '\t[%s]\t' % i + self.bodies[i].__str__() +'\n'
+            s += f'\t[{i}]\t{str(self.bodies[i])}\n'
 
-        s += 'Hand count= %s\n' % len(self.hands)
+        s += f'Hand count= {len(self.hands)}\n'
         for i in range(len(self.hands)):
-            s += '\t[%s]\t' % i + self.hands[i].__str__() +'\n'
+            s += f'\t[{i}]\t{str(self.hands[i])}\n'
         return s
 
 if __name__ == '__main__':
     hvc_res = HVCResult()
-    print hvc_res
+    print(hvc_res)
 
 

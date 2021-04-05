@@ -18,6 +18,7 @@
 
 from PIL import Image
 
+
 class GrayscaleImage(object):
     """8 bit grayscale image. """
     __slots__ = ['width', 'height', 'data']
@@ -40,6 +41,6 @@ class GrayscaleImage(object):
         y = 0
         for y in range(h):
             for x in range(w):
-                img.putpixel((x, y), ord(self.data[w * y + x]))
+                img.putpixel((x, y), self.data[w * y + x])
         img.save(fname)
         return True

@@ -47,14 +47,14 @@ class SerialConnector(Connector):
 
     def send_data(self, data):
         if self._is_connected == False:
-            raise Exception('Serial port has not connected yet!')
+            raise Exception('Serial port is not connected yet!')
 
         self._ser.write(data)
         return True
 
     def receive_data(self, read_byte_size):
         if self._is_connected == False :
-            raise Exception('Serial port has not connected yet!')
+            raise Exception('Serial port is not connected yet!')
 
         return self._ser.read(read_byte_size)
 

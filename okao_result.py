@@ -43,7 +43,7 @@ class DetectionResult(object):
         y = self.pos_y
         size = self.size
         conf = self.conf
-        return 'X:%s Y:%s Size:%s Conf:%s' % (x,y,size,conf)
+        return f'X: {x} Y: {y} Size: {size} Conf: {conf}'
 
 class FaceResult(DetectionResult):
     """Detection result for face"""
@@ -60,13 +60,13 @@ class FaceResult(DetectionResult):
 
     def __str__(self):
         s = DetectionResult.__str__(self) +'\n'
-        if self.direction is not None:    s += '\t\t' + self.direction.__str__() +'\n'
-        if self.age is not None:    s += '\t\t' + self.age.__str__() +'\n'
-        if self.gender is not None: s += '\t\t' + self.gender.__str__() +'\n'
-        if self.gaze is not None:   s += '\t\t' + self.gaze.__str__() +'\n'
-        if self.blink is not None:  s += '\t\t' + self.blink.__str__() +'\n'
-        if self.expression is not None:    s += '\t\t' + self.expression.__str__() +'\n'
-        if self.recognition is not None:  s += '\t\t' + self.recognition.__str__()
+        if self.direction is not None:    s += f'\t\t{str(self.direction)}\n'
+        if self.age is not None:    s += f'\t\t{str(self.age)}\n'
+        if self.gender is not None: s += f'\t\t{str(self.gender)}\n'
+        if self.gaze is not None:   s += f'\t\t{str(self.gaze)}\n'
+        if self.blink is not None:  s += f'\t\t{str(self.blink)}\n'
+        if self.expression is not None:    s += f'\t\t{str(self.expression)}\n'
+        if self.recognition is not None:  s += f'\t\t{str(self.recognition)}\n'
         return s
 
 class DirectionResult(object):
@@ -79,8 +79,7 @@ class DirectionResult(object):
         self.conf = conf
 
     def __str__(self):
-        return 'Direction     LR:{0} UD:{1} Roll:{2} Conf:{3}'.\
-                   format(self.LR, self.UD, self.roll, self.conf)
+        return f'Direction     LR: {self.LR} UD: {self.UD} Roll: {self.roll} Conf: {self.conf}'
 
 class AgeResult(object):
     """Result of Age estimation"""
@@ -90,12 +89,12 @@ class AgeResult(object):
         self.conf = conf
 
     def __str__(self):
-        str = 'Age           '
+        string = 'Age           '
         if self.age == EST_NOT_POSSIBLE:
-            str += 'Age:- '
+            string += 'Age:- '
         else:
-            str += 'Age:{0} '.format(self.age)
-        return str + 'Conf:{0}'.format(self.conf)
+            string += f'Age: {self.age} '
+        return string + f'Conf: {self.conf}'
 
 class GenderResult(object):
     """Result of Gender estimation"""
@@ -109,7 +108,7 @@ class GenderResult(object):
             _dic_key = GENDER_UNKNOWN
         else:
             _dic_key = self.gender
-        return 'Gender        Gender:{0} Conf:{1}'.format(gender_dic[_dic_key], self.conf)
+        return f'Gender        Gender: {gender_dic[_dic_key]} Conf: {self.conf}'
 
 class GazeResult(object):
     """Result of Gaze estimation"""
@@ -119,7 +118,7 @@ class GazeResult(object):
         self.gazeUD = gazeUD
 
     def __str__(self):
-        return 'Gaze          LR:{0} UD:{1}'.format(self.gazeLR, self.gazeUD)
+        return f'Gaze          LR: {self.gazeLR} UD: {self.gazeUD}'
 
 class BlinkResult(object):
     """Result of Blink estimation"""
@@ -129,7 +128,7 @@ class BlinkResult(object):
         self.ratioL = ratioL
 
     def __str__(self):
-        return 'Blink         R:{0} L:{1}'.format(self.ratioR, self.ratioL)
+        return 'Blink         R: {self.ratioR} L: {self.ratioL}'
 
 class ExpressionResult(object):
     """Result of Expression estimation"""
@@ -156,16 +155,13 @@ class ExpressionResult(object):
         return exp_str, max_score
 
     def __str__(self):
-        str ='Expression    '
+        string ='Expression    '
         if self.neutral == EST_NOT_POSSIBLE:
-            str += 'Exp:- Score:- (Neutral:- Happiness:- Surprise:- Anger:- Sadness:- NegPos:-)'
+            string += 'Exp:- Score:- (Neutral:- Happiness:- Surprise:- Anger:- Sadness:- NegPos:-)'
         else:
             top1_exp, top1_score = self.get_top1()
-            str += 'Exp:{0} Score:{1} '.format(top1_exp, top1_score)\
-                + '(Neutral:{0} Happiness:{1} Surprise:{2} Anger:{3} Sadness:{4} NegPos:{5})'\
-                .format(self.neutral, self.happiness, self.surprise, self.anger,\
-                self.sadness, self.neg_pos)
-        return str
+            string += f'Exp: {top1_exp} Score: {top1_score} (Neutral: {self.neutral} Happiness: {self.happiness} Surprise: {self.surprise} Anger: {self.anger} Sadness: {self.sadness} NegPos: {self.neg_pos})' 
+        return string
 
 class RecognitionResult(object):
     """Result of Recognition"""
@@ -176,14 +172,14 @@ class RecognitionResult(object):
 
     def __str__(self):
         if self.uid == RECOG_NO_DATA_IN_ALBUM:
-            str = 'Recognition   No data is registered in the album.'
+            string = 'Recognition   No data is registered in the album.'
         elif self.uid == RECOG_NOT_POSSIBLE:
-            str = 'Recognition   Uid:- Score:{0}'.format(self.score)
+            string = f'Recognition   Uid:- Score: {self.score}'
         elif self.uid == -1:
-            str = 'Recognition   Uid:Unknown Score:{0}'.format(self.score)
+            string = f'Recognition   Uid:Unknown Score: {self.score}'
         else:
-            str = 'Recognition   Uid:{0} Score:{1}'.format(self.uid, self.score)
-        return str
+            string = f'Recognition   Uid: {self.uid} Score: {self.score}'
+        return string
 
 if __name__ == '__main__':
     pass
