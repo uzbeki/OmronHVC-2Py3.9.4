@@ -1,3 +1,11 @@
+####Getting started manual
+    1. install python 3 (ideally python 3.9.4) win32 version
+    2. clone this repo: `git clone https://github.com/uzbeki/OmronHVC-2Py3.9.4.git`
+    3. open your terminal inside the repo directory *OmronHVC-2Py3.9.4*
+    4. install requirements with `py -3 -m pip install -r requirements.txt`
+    5. start the application `py -3 .\execution.py COM3 9600 ON`
+
+    
 ### Sample Code for B5T-007001(HVC-P2)
 ***
 - This is sample code for **[B5T-007001](https://www.components.omron.com/mobile/hvc_p2) (OMRON Human Vision Components HVC-P2)**.<br><br>
